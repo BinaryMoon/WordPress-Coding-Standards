@@ -27,6 +27,7 @@
 				<property name="indent" value="4"/>
 				<property name="tabIndent" value="true"/>
 			</properties>
+			<exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
 		</rule>
 
 		<!-- Covers rule: Use real tabs and not spaces. -->
