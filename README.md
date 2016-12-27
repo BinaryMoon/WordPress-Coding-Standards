@@ -13,6 +13,11 @@ This project is a collection of [PHP_CodeSniffer](https://github.com/squizlabs/P
 
 ## Installation
 
+### Requirements
+
+The WordPress Coding Standards require the [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) version **2.7.0** or higher.
+The WordPress Coding Standards are currently [not compatible with the upcoming PHPCS 3 release](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/718).
+
 ### Composer
 
 Standards can be installed with [Composer](https://getcomposer.org/) dependency manager:
@@ -32,7 +37,7 @@ For convenience of using `phpcs` as global command you might want to add path to
 
 1. Install PHP_CodeSniffer by following its [installation instructions](https://github.com/squizlabs/PHP_CodeSniffer#installation) (via Composer, PEAR, or Git checkout).
 
-  Do ensure, if for example you're using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV), that PHP_CodeSniffer's version matches our requirements (you can check the required version in [composer.json](composer.json#L18)).
+  Do ensure, if for example you're using [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV), that PHP_CodeSniffer's version matches our [requirements](#requirements).
 
 2. Clone WordPress standards repository:
 
@@ -124,6 +129,10 @@ sublime-phpcs is insanely powerful, but if you'd prefer automatic linting, [Subl
 
 ![Atom Linter in action using WordPress Coding Standards](https://cloud.githubusercontent.com/assets/224636/12740542/131c5894-c942-11e5-9e31-5e020c993224.png)
 
+### Visual Studio
+
+Please see “[Setting up PHP CodeSniffer in Visual Studio Code](https://tommcfarlin.com/php-codesniffer-in-visual-studio-code/)”, a tutorial by Tom McFarlin.
+
 ## Standards subsets
 
 The project encompasses a super–set of the sniffs that the WordPress community may need. If you use the `WordPress` standard you will get all the checks. Some of them might be unnecessary for your environment, for example those specific to WordPress VIP coding requirements.
@@ -132,8 +141,8 @@ You can use the following as standard names when invoking `phpcs` to select snif
 
  - `WordPress` — complete set with all of the sniffs in the project
   - `WordPress-Core` — main ruleset for [WordPress core coding standards](http://make.wordpress.org/core/handbook/coding-standards/)
-  - `WordPress-Docs` — additional ruleset for inline documentation
-  - `WordPress-Extra` — extended ruleset for optional best practices sniffs
+  - `WordPress-Docs` — additional ruleset for [WordPress inline documentation standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/)
+  - `WordPress-Extra` — extended ruleset for recommended best practices, not sufficiently covered in the WordPress core coding standards
     - includes `WordPress-Core`
   - `WordPress-VIP` — extended ruleset for [WordPress VIP coding requirements](http://vip.wordpress.com/documentation/code-review-what-we-look-for/)
     - includes `WordPress-Core`
