@@ -251,6 +251,8 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 		'sanitize_bookmark'          => true,
 		'sanitize_email'             => true,
 		'sanitize_file_name'         => true,
+		'sanitize_hex_color_no_hash' => true,
+		'sanitize_hex_color'	     => true,
 		'sanitize_html_class'        => true,
 		'sanitize_key'               => true,
 		'sanitize_meta'              => true,
@@ -1081,13 +1083,7 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 			$condition    = $this->tokens[ $conditionPtr ];
 
 			if ( ! isset( $condition['parenthesis_opener'] ) ) {
-
-				$this->phpcsFile->addError(
-					'Possible parse error, condition missing open parenthesis.',
-					$conditionPtr,
-					'IsValidatedMissingConditionOpener'
-				);
-
+				// Live coding or parse error.
 				return false;
 			}
 
@@ -1101,10 +1097,10 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 			 */
 
 			// Check if we are in a function.
-			$function = $this->phpcsFile->findPrevious( T_FUNCTION, $stackPtr );
+			$function = $this->phpcsFile->getCondition( $stackPtr, T_FUNCTION );
 
 			// If so, we check only within the function, otherwise the whole file.
-			if ( false !== $function && $stackPtr < $this->tokens[ $function ]['scope_closer'] ) {
+			if ( false !== $function ) {
 				$scope_start = $this->tokens[ $function ]['scope_opener'];
 			} else {
 				$scope_start = 0;
@@ -1131,7 +1127,7 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 				}
 
 				// If we're checking for a specific array key (ex: 'hello' in
-				// $_POST['hello']), that mush match too.
+				// $_POST['hello']), that must match too.
 				if ( isset( $array_key ) && $this->get_array_access_key( $i ) !== $array_key ) {
 					continue;
 				}
