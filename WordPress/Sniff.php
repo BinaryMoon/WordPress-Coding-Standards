@@ -229,22 +229,24 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 	/**
 	 * Functions that sanitize values.
 	 *
+	 * This list is complementary to the `$unslashingSanitizingFunctions`
+	 * list.
+	 * Sanitizing functions should be added to this list if they do *not*
+	 * implicitely unslash data and to the `$unslashingsanitizingFunctions`
+	 * list if they do.
+	 *
 	 * @since 0.5.0
 	 *
 	 * @var array
 	 */
 	public static $sanitizingFunctions = array(
 		'_wp_handle_upload'          => true,
-		'absint'                     => true,
 		'array_key_exists'           => true,
 		'esc_url_raw'                => true,
 		'filter_input'               => true,
 		'filter_var'                 => true,
-		'floatval'                   => true,
 		'hash_equals'                => true,
 		'in_array'                   => true,
-		'intval'                     => true,
-		'is_array'                   => true,
 		'is_email'                   => true,
 		'number_format'              => true,
 		'sanitize_bookmark_field'    => true,
@@ -254,7 +256,6 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 		'sanitize_hex_color_no_hash' => true,
 		'sanitize_hex_color'	     => true,
 		'sanitize_html_class'        => true,
-		'sanitize_key'               => true,
 		'sanitize_meta'              => true,
 		'sanitize_mime_type'         => true,
 		'sanitize_option'            => true,
@@ -282,6 +283,11 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 
 	/**
 	 * Sanitizing functions that implicitly unslash the data passed to them.
+	 *
+	 * This list is complementary to the `$sanitizingFunctions` list.
+	 * Sanitizing functions should be added to this list if they also
+	 * implicitely unslash data and to the `$sanitizingFunctions` list
+	 * if they don't.
 	 *
 	 * @since 0.5.0
 	 *
@@ -541,6 +547,21 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 	 */
 	public function strip_quotes( $string ) {
 		return preg_replace( '`^([\'"])(.*)\1$`Ds', '$2', $string );
+	}
+
+	/**
+	 * Convert an arbitrary string to an alphanumeric string with underscores.
+	 *
+	 * Pre-empt issues with arbitrary strings being used as error codes in XML and PHP.
+	 *
+	 * @since 0.11.0
+	 *
+	 * @param string $base_string Arbitrary string.
+	 *
+	 * @return string
+	 */
+	protected function string_to_errorcode( $base_string ) {
+		return preg_replace( '`[^a-z0-9_]`i', '_', strtolower( $base_string ) );
 	}
 
 	/**
@@ -995,7 +1016,11 @@ abstract class WordPress_Sniff implements PHP_CodeSniffer_Sniff {
 		}
 
 		// Check if this is a sanitizing function.
-		return isset( self::$sanitizingFunctions[ $functionName ] );
+		if ( isset( self::$sanitizingFunctions[ $functionName ] ) || isset( self::$unslashingSanitizingFunctions[ $functionName ] ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
