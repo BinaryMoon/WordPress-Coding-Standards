@@ -173,7 +173,7 @@ class WordPress_Sniffs_WP_I18nSniff extends WordPress_Sniff {
 		for ( $i = ( $func_open_paren_token + 1 ); $i < $this->tokens[ $func_open_paren_token ]['parenthesis_closer']; $i++ ) {
 			$this_token                = $this->tokens[ $i ];
 			$this_token['token_index'] = $i;
-			if ( in_array( $this_token['code'], PHP_CodeSniffer_Tokens::$emptyTokens, true ) ) {
+			if ( isset( PHP_CodeSniffer_Tokens::$emptyTokens[ $this_token['code'] ] ) ) {
 				continue;
 			}
 			if ( T_COMMA === $this_token['code'] ) {
@@ -183,7 +183,9 @@ class WordPress_Sniffs_WP_I18nSniff extends WordPress_Sniff {
 			}
 
 			// Merge consecutive single or double quoted strings (when they span multiple lines).
-			if ( T_CONSTANT_ENCAPSED_STRING === $this_token['code'] || 'T_DOUBLE_QUOTED_STRING' === $this_token['type'] ) {
+			if ( T_CONSTANT_ENCAPSED_STRING === $this_token['code'] || 'T_DOUBLE_QUOTED_STRING' === $this_token['type']
+				|| T_HEREDOC === $this_token['code'] || 'T_NOWDOC' === $this_token['type']
+			) {
 				for ( $j = ( $i + 1 ); $j < $this->tokens[ $func_open_paren_token ]['parenthesis_closer']; $j++ ) {
 					if ( $this_token['code'] === $this->tokens[ $j ]['code'] ) {
 						$this_token['content'] .= $this->tokens[ $j ]['content'];
@@ -203,7 +205,8 @@ class WordPress_Sniffs_WP_I18nSniff extends WordPress_Sniff {
 				}
 				$i = $this_token['parenthesis_closer'];
 			}
-		}
+		} // End for().
+
 		if ( ! empty( $argument_tokens ) ) {
 			$arguments_tokens[] = $argument_tokens;
 		}
@@ -363,7 +366,7 @@ class WordPress_Sniffs_WP_I18nSniff extends WordPress_Sniff {
 			}
 			return true;
 		}
-		if ( T_DOUBLE_QUOTED_STRING === $tokens[0]['code'] ) {
+		if ( T_DOUBLE_QUOTED_STRING === $tokens[0]['code'] || T_HEREDOC === $tokens[0]['code'] ) {
 			$interpolated_variables = $this->get_interpolated_variables( $content );
 			foreach ( $interpolated_variables as $interpolated_variable ) {
 				$code = $this->string_to_errorcode( 'InterpolatedVariable' . ucfirst( $arg_name ) );
@@ -380,7 +383,7 @@ class WordPress_Sniffs_WP_I18nSniff extends WordPress_Sniff {
 		}
 
 		$code = $this->string_to_errorcode( 'NonSingularStringLiteral' . ucfirst( $arg_name ) );
-		$this->addMessage( 'The $%s arg should be single a string literal, not "%s".', $stack_ptr, $is_error, $code, array( $arg_name, $content ) );
+		$this->addMessage( 'The $%s arg must be a single string literal, not "%s".', $stack_ptr, $is_error, $code, array( $arg_name, $content ) );
 		return false;
 	}
 
