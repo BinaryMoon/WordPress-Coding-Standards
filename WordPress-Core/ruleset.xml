@@ -25,8 +25,6 @@
     Ref: https://make.wordpress.org/core/handbook/coding-standards/php/#indentation
     #############################################################################
     -->
-<<<<<<< HEAD
-=======
     <!-- Covers rule: Your indentation should always reflect logical structure. -->
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
@@ -37,36 +35,24 @@
         </properties>
     </rule>
     <rule ref="WordPress.Arrays.ArrayIndentation"/>
->>>>>>> WordPress-Coding-Standards/develop
 
-        <!-- Covers rule: Your indentation should always reflect logical structure. -->
-        <rule ref="Generic.WhiteSpace.ScopeIndent">
-            <properties>
-                <property name="exact" value="false" />
-                <property name="indent" value="4"/>
-                <property name="tabIndent" value="true"/>
-                <property name="ignoreIndentationTokens" type="array" value="T_HEREDOC,T_NOWDOC,T_INLINE_HTML" />
-            </properties>
-            <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
-        </rule>
+    <!-- Covers rule: Use real tabs and not spaces. -->
+    <arg name="tab-width" value="4"/>
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
 
-        <!-- Covers rule: Use real tabs and not spaces. -->
-        <arg name="tab-width" value="4"/>
-        <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
-
-        <!-- Covers rule: Note the comma after the last array item: this is recommended. -->
-        <rule ref="WordPress.Arrays.ArrayDeclaration">
-            <exclude name="WordPress.Arrays.ArrayDeclaration.SingleLineNotAllowed" />
-        </rule>
-        <!-- Covers rule: For associative arrays, values should start on a new line.
-             Also covers various single-line array whitespace issues. -->
-        <rule ref="WordPress.Arrays.ArrayDeclarationSpacing">
-            <!-- Exclude the upstream checks which are already thrown by the
-                 WordPress.Arrays.ArrayDeclaration sniff. -->
-            <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.NotLowerCase" />
-            <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.SpaceAfterKeyword" />
-            <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.SpaceInEmptyArray" />
-        </rule>
+    <!-- Covers rule: Note the comma after the last array item: this is recommended. -->
+    <rule ref="WordPress.Arrays.ArrayDeclaration">
+        <exclude name="WordPress.Arrays.ArrayDeclaration.SingleLineNotAllowed"/>
+    </rule>
+    <!-- Covers rule: For associative arrays, values should start on a new line.
+         Also covers various single-line array whitespace issues. -->
+    <rule ref="WordPress.Arrays.ArrayDeclarationSpacing">
+        <!-- Exclude the upstream checks which are already thrown by the
+             WordPress.Arrays.ArrayDeclaration sniff. -->
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.NotLowerCase"/>
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.SpaceAfterKeyword"/>
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.SpaceInEmptyArray"/>
+    </rule>
 
 
     <!--
